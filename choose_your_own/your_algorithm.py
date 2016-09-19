@@ -24,7 +24,6 @@ plt.scatter(grade_slow, bumpy_slow, color = "r", label="slow")
 plt.legend()
 plt.xlabel("bumpiness")
 plt.ylabel("grade")
-plt.show()
 ################################################################################
 
 
@@ -32,13 +31,38 @@ plt.show()
 ### visualization code (prettyPicture) to show you the decision boundary
 
 
+from sklearn.metrics import accuracy_score
+from time import time
 
 
+# chooses value based on value of neighbors in training data
+from sklearn.neighbors import KNeighborsClassifier
+clf = KNeighborsClassifier(n_neighbors=4) # 94.0%
+
+# creates multiple instances of another classifier (Decision Tree by default) and tweaks the values of each one to better handle hard-to-classify data
+# from sklearn.ensemble import AdaBoostClassifier
+# clf = AdaBoostClassifier()
+
+# creates multiple decision trees that randomly ignore certain features or training data (?)
+# from sklearn.ensemble import RandomForestClassifier
+# clf = RandomForestClassifier()
 
 
+t0 = time()
+clf.fit(features_train, labels_train)
+print "training time:", round(time()-t0, 3), "s"
+
+t0 = time()
+pred = clf.predict(features_test)
+print "prediction time:", round(time()-t0, 3), "s"
+
+score = accuracy_score(labels_test, pred)
+print "accuracy:", round(score, 3)
 
 
 try:
     prettyPicture(clf, features_test, labels_test)
 except NameError:
     pass
+
+plt.show()
