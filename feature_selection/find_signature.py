@@ -39,5 +39,21 @@ labels_train   = labels_train[:150]
 
 ### your code goes here
 
+from sklearn import tree
+from sklearn.metrics import accuracy_score
 
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
+clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
 
+score = accuracy_score(labels_test, pred)
+print "accuracy:", round(score, 3)
+
+features = vectorizer.get_feature_names()
+
+def printImportances():
+    for i, fi in enumerate(clf.feature_importances_):
+        if fi >= 0.2:
+            print i, features[i], fi
+
+printImportances()

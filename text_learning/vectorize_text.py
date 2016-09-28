@@ -62,7 +62,7 @@ def import_emails(quick=False, force=False):
                 text = parseOutText(email)
 
                 ### use str.replace() to remove any instances of the words
-                for word in ["sara", "shackleton", "chris", "germani"]:
+                for word in ["sara", "shackleton", "chris", "germani", "sshacklensf", "cgermannsf"]:
                     text = text.replace(word, '')
 
                 # not sure if this part is expected by the quiz, but it seems to get me closer to their target number
@@ -88,7 +88,7 @@ def import_emails(quick=False, force=False):
 
     return word_data, from_data
 
-word_data, from_data = import_emails(force=False,quick=False)
+word_data, from_data = import_emails(force=True,quick=False)
 assert len(word_data) == len(from_data), 'lengths not equal'
 
 print "word_data[152] = ", word_data[152] if len(word_data) >=152 else "not set"
@@ -97,5 +97,6 @@ print "word_data[152] = ", word_data[152] if len(word_data) >=152 else "not set"
 
 tfidf = TfidfVectorizer(stop_words='english')
 tfidf.fit(word_data, from_data)
+# note, this file was modified to omit the words "sshacklensf" & "cgermannsf" (names) for the next section. So these won't work any more
 print "number of feature names:", len(tfidf.get_feature_names()) # expecting 38757
 print "word 34597 = ", tfidf.get_feature_names()[34597] # quiz wants "stephaniethank"
