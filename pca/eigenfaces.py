@@ -66,7 +66,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 ###############################################################################
 # Compute a PCA (eigenfaces) on the face dataset (treated as unlabeled
 # dataset): unsupervised feature extraction / dimensionality reduction
-n_components = 150
+n_components = 100
 
 print "Extracting the top %d eigenfaces from %d faces" % (n_components, X_train.shape[0])
 t0 = time()
@@ -74,6 +74,8 @@ pca = RandomizedPCA(n_components=n_components, whiten=True).fit(X_train)
 print "done in %0.3fs" % (time() - t0)
 
 eigenfaces = pca.components_.reshape((n_components, h, w))
+
+#print "explained variance", pca.explained_variance_ratio_
 
 print "Projecting the input data on the eigenfaces orthonormal basis"
 t0 = time()
@@ -107,9 +109,15 @@ t0 = time()
 y_pred = clf.predict(X_test_pca)
 print "done in %0.3fs" % (time() - t0)
 
+# this includes te f1 score
+# n_components => f1 score
+# 10 ->  0.48
+# 100 -> 0.85
+# 150 -> 0.83
+# 250 -> 0.82
+
 print classification_report(y_test, y_pred, target_names=target_names)
 print confusion_matrix(y_test, y_pred, labels=range(n_classes))
-
 
 ###############################################################################
 # Qualitative evaluation of the predictions using matplotlib
@@ -136,11 +144,11 @@ def title(y_pred, y_test, target_names, i):
 prediction_titles = [title(y_pred, y_test, target_names, i)
                          for i in range(y_pred.shape[0])]
 
-plot_gallery(X_test, prediction_titles, h, w)
+#plot_gallery(X_test, prediction_titles, h, w)
 
 # plot the gallery of the most significative eigenfaces
 
 eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
-plot_gallery(eigenfaces, eigenface_titles, h, w)
+#plot_gallery(eigenfaces, eigenface_titles, h, w)
 
-pl.show()
+#pl.show()
