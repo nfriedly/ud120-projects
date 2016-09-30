@@ -1,5 +1,15 @@
 https://docs.google.com/document/d/1NDgi1PrNJP7WTbfSUuRUnz8yzs5nGVTSzpO7oeNTEWA/edit
 
+Final submission:
+Use all numeric features, ignore email for now.
+No modifications to data set.
+Classifier is:
+Pipeline(steps=[('features', SelectKBest(k=5, score_func=<function f_classif at 0x10c5b1140>)), ('clf', GaussianNB(priors=None))])
+Results are:
+        Accuracy: 0.85307       Precision: 0.43577      Recall: 0.34600 F1: 0.38573     F2: 0.36087
+        Total predictions: 15000        True positives:  692    False positives:  896   False negatives: 1308   True negatives: 12104
+
+
 
 Enron Submission Free-Response Questions
 
@@ -15,15 +25,34 @@ We can’t wait to see what you’ve put together for this project!
 1.
 Summarize for us the goal of this project and how machine learning is useful in trying to accomplish it. As part of your answer, give some background on the dataset and how it can be used to answer the project question. Were there any outliers in the data when you got it, and how did you handle those?  [relevant rubric items: “data exploration”, “outlier investigation”]
 
+The Enron dataset includes a large number of people employed by or related to Enron, with many details about each person, including financial data and/or email history for some. Several of these people committed fraud and, together, their frauds together brought the company down. The POI list (Persons of Interest) names individuals who were indited, settled, got a plea deal, or got immunity in exchange for testifying. The goal is to build a POI-identifier based on the avaliable data.
+
+I spent a fair amount of time graphing the data different ways and exploring the relationships between various fields. I removed the "TOTAL" field from the dataset because it was an invalid outlier that completely skewed the results.
+
 2.
 What features did you end up using in your POI identifier, and what selection process did you use to pick them? Did you have to do any scaling? Why or why not? As part of the assignment, you should attempt to engineer your own feature that does not come ready-made in the dataset -- explain what feature you tried to make, and the rationale behind it. (You do not necessarily have to use it in the final analysis, only engineer and test it.) In your feature selection step, if you used an algorithm like a decision tree, please also give the feature importances of the features that you use, and if you used an automated feature selection function like SelectKBest, please report the feature scores and reasons for your choice of parameter values.  [relevant rubric items: “create new features”, “properly scale features”, “intelligently select feature”]
 
+I dropped in all of the numeric features, and then let SelectKBest work it's magic. Trial and error found that I got good results with 3 and 5 features, so I ended up with 'bonus', 'salary', 'total_stock_value', 'exercised_stock_options', 'shared_receipt_with_poi'.
+
+I also tried creating new features with PCA, but the results didn't beat the simple SelectKBest in my case.
+
 What algorithm did you end up using? What other one(s) did you try? How did model performance differ between algorithms?  [relevant rubric item: “pick an algorithm”]
 
+I tried every classification algorithin we covered and a few we didn't! In the end, I stuck with the default GaussianNB classifier. This didn't give the maximum results on any particular score, but it gave a good overall balance that hit the goals (>0.3 precision and >0.3 recall).
+
+SVM kept getting divide-by-zero errors and then failing. I may have been able to tune it to produce better results, although I tried tuning several others and never managed to beat the GausianNB on both precision and recall.
+
+3.
 What does it mean to tune the parameters of an algorithm, and what can happen if you don’t do this well?  How did you tune the parameters of your particular algorithm? (Some algorithms do not have parameters that you need to tune -- if this is the case for the one you picked, identify and briefly explain how you would have done it for the model that was not your final choice or a different model that does utilize parameter tuning, e.g. a decision tree classifier).  [relevant rubric item: “tune the algorithm”]
 
+Try different values for the tune-able parameters and check the results. I tried both manual tuning and using GridSearchCV. The latter seemed to end up in an endless loop when submitted, and I also managed to get it in a state where it was at 100% CPU load for several hours without even finishing the first option in the matrix!
+
+4.
 What is validation, and what’s a classic mistake you can make if you do it wrong? How did you validate your analysis?  [relevant rubric item: “validation strategy”]
 
+Doing it wrong can lead to over fitting. I'm using the included tester.py to perform validation but, among other things, it splits the data into training and test data, and reports several scores including Accuracy, Precision, Recall, and F1. I was primarily watching Precision and Recall - trying to keep both above 0.3 and still keep a balance.
+
+5.
 Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm’s performance. [relevant rubric item: “usage of evaluation metrics”]
 
-
+Accuracy is correct % of results, Precision is the likelyhood that a positive result is truely positive, Recall is the likelyhood that a true positive will be labeled positive.
